@@ -21,10 +21,21 @@ def update_physics(objs, dt=1):
         obj.vel += obj.acc * dt
         obj.pos += obj.vel * dt
 
-        if obj.pos[0] - obj.radius < 0 or obj.pos[0] + obj.radius > 300:
-            obj.vel[0] *= -obj.elastic # v-collide
-        if obj.pos[1] - obj.radius < 0 or obj.pos[1] + obj.radius > 300:
-            obj.vel[1] *= -obj.elastic # h-collide
+            # Left or right wall
+	    if obj.pos[0] - obj.radius < 0:
+            obj.pos[0] = obj.radius
+            obj.vel[0] = -obj.vel[0] * obj.elastic
+        elif obj.pos[0] + obj.radius > 1000:
+            obj.pos[0] = 1000 - obj.radius
+            obj.vel[0] = -obj.vel[0] * obj.elastic
+
+        # Top or bottom wall
+        if obj.pos[1] - obj.radius < 0:
+            obj.pos[1] = obj.radius
+            obj.vel[1] = -obj.vel[1] * obj.elastic
+        elif obj.pos[1] + obj.radius > 1000:
+            obj.pos[1] = 1000 - obj.radius
+            obj.vel[1] = -obj.vel[1] * obj.elastic
 
         # ball-collide
         for j,obj2 in enumerate(objs):
