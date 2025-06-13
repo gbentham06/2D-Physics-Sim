@@ -22,7 +22,7 @@ def update_physics(objs, dt=1):
         obj.pos += obj.vel * dt
 
             # Left or right wall
-	    if obj.pos[0] - obj.radius < 0:
+	if obj.pos[0] - obj.radius < 0:
             obj.pos[0] = obj.radius
             obj.vel[0] = -obj.vel[0] * obj.elastic
         elif obj.pos[0] + obj.radius > 1000:
