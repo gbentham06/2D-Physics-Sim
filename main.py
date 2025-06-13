@@ -1,10 +1,10 @@
-import random
+import random as r
 import numpy as np
 
 class ball:
     def __init__(self, pos, vel=[0,0], acc=[0,0], radius=1, mass=1, elastic=0, friction=0):
         self.pos = np.array(pos)
-        self.velocity = np.array(vel)
+        self.vel = np.array(vel)
         self.acc = np.array(acc)
         self.radius = radius
         self.mass = mass
@@ -48,12 +48,6 @@ def update_physics(objs, dt=1):
                     obj.vel -= (impulse/obj.mass) * n
                     obj2.vel = (impulse/obj2.mass) * n
 
+rand = r.randint(50, 950)
 
-
-objects = [ball([random.randint(50, 250), random.randint(50, 250)],
-                velocity=[random.randint(50, 250), random.randint(50, 250)]),
-            ball([random.randint(50, 250), random.randint(50, 250)],
-                velocity=[random.randint(50, 250), random.randint(50, 250)]),
-            ball([random.randint(50, 250), random.randint(50, 250)],
-                velocity=[random.randint(50, 250), random.randint(50, 250)]),
-                ]
+objects = [ball([rand, rand], vel=[rand, rand])]
