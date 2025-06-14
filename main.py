@@ -75,8 +75,7 @@ def update_physics(screen, objs, dt=0.01):
                     # Apply impulse
                     obj.vel -= (j / obj.mass) * n
                     obj2.vel += (j / obj2.mass) * n
-
-        print(obj.pos)
+                    
         py.draw.circle(screen, obj.color, (obj.pos[0], 1000-obj.pos[1]), obj.radius, 20)
         
  
