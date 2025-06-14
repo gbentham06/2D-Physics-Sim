@@ -23,6 +23,7 @@ class ball:
         self.friction = friction
 
 def border_collisions(obj, width, height):
+
     # walls
     if obj.pos[0] < obj.radius:
         obj.pos[0] = obj.radius  
@@ -32,6 +33,7 @@ def border_collisions(obj, width, height):
         obj.pos[0] = width - obj.radius
         obj.vel[0] *= -obj.elastic
         obj.vel[1] *= obj.friction
+
     # Ceiling & Floor
     if obj.pos[1] < obj.radius:
         obj.pos[1] = obj.radius
@@ -41,6 +43,7 @@ def border_collisions(obj, width, height):
         obj.pos[1] = height - obj.radius
         obj.vel[1] *= -obj.elastic
         obj.vel[0] *= obj.friction
+        
         # elegant stopping
         if np.linalg.norm(obj.vel) < 20:
             obj.vel = np.array([0.0, 0.0])
@@ -64,7 +67,6 @@ def ball_collisions(objects):
                 else:
                     n = dist_vec / dist # normalised vector
                 
-                
                 obj1.pos += n * overlap * 0.5
                 obj2.pos -= n * overlap * 0.5
                 v_rel = obj1.vel - obj2.vel
@@ -84,8 +86,6 @@ def ball_collisions(objects):
                     obj1.vel = np.array([0.0, 0.0])
 
 
-
-
 def force(obj, drag_coef=0.5):
     gravity = np.array([0.0, 981.0]) * obj.mass
 
@@ -96,6 +96,7 @@ def force(obj, drag_coef=0.5):
     if obj.mass > 0:
         obj.acc = total_force / obj.mass
 
+
 def update_physics(obj, dt):
     prev_acc = obj.acc
     obj.pos += obj.vel * dt + 0.5 * prev_acc * (dt**2)
@@ -104,19 +105,19 @@ def update_physics(obj, dt):
     nxt_acc = obj.acc
     obj.vel += 0.5 * (prev_acc + nxt_acc) * dt
 
+
 def r_colour():
     return (r.randint(0,255), r.randint(0,255), r.randint(0,255))
 
+
 objects = [ball([r.randint(50,950), r.randint(50,950)], vel=[r.randint(-950,950), r.randint(-950,950)], color=r_colour())
            for i in range(50)]
-
 
 while running:
     for event in py.event.get():
         if event.type == py.QUIT:
             running = False
             py.quit()
-
 
     # physics
     for object in objects:
