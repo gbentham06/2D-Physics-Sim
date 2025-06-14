@@ -6,23 +6,23 @@ import time
 running = True
 py.init()
 window = py.display.set_mode((1000,1000))
-frame_time = 1/200
+frame_time = 0.01
 playback_speed = 1
+runtime = 0
 
 
 class ball:
-    def __init__(self, pos, vel=[0,0], radius=10, mass=1, color=(0, 0, 255), elastic=1.0, friction=0.99):
+    def __init__(self, pos, vel=[0,0], radius=10, color=(0, 0, 255), elastic=0.7, friction=0.9, density=1):
         self.pos = np.array(pos, dtype=float)
         self.vel = np.array(vel, dtype=float)
         self.acc = np.array([0,0], dtype=float)
         self.radius = radius
-        self.mass = mass
+        self.mass = np.pi * self.radius**2 * density
         self.color = color
         self.elastic = elastic
         self.friction = friction
 
 def border_collisions(obj, width, height):
-
     # walls
     if obj.pos[0] < obj.radius:
         obj.pos[0] = obj.radius  
@@ -32,7 +32,6 @@ def border_collisions(obj, width, height):
         obj.pos[0] = width - obj.radius
         obj.vel[0] *= -obj.elastic
         obj.vel[1] *= obj.friction
-
     # Ceiling & Floor
     if obj.pos[1] < obj.radius:
         obj.pos[1] = obj.radius
@@ -42,6 +41,10 @@ def border_collisions(obj, width, height):
         obj.pos[1] = height - obj.radius
         obj.vel[1] *= -obj.elastic
         obj.vel[0] *= obj.friction
+        # elegant stopping
+        if np.linalg.norm(obj.vel) < 20:
+            obj.vel = np.array([0.0, 0.0])
+        
     
 def ball_collisions(objects):
     for i in range(len(objects)):
@@ -76,20 +79,22 @@ def ball_collisions(objects):
                 
                 obj1.vel += (j / obj1.mass) * n
                 obj2.vel -= (j / obj2.mass) * n
-def force(obj, drag_coef=0.001):
+
+                if np.linalg.norm(obj1.vel) < 20:
+                    obj1.vel = np.array([0.0, 0.0])
+
+
+
+
+def force(obj, drag_coef=0.5):
     gravity = np.array([0.0, 981.0]) * obj.mass
-    drag = np.array([0.0, 0.0], dtype=float)
-    speed = np.linalg.norm(obj.vel)
 
-    if speed > 0:
-        drag = -drag_coef * speed * obj.vel
+    drag_force = -drag_coef * obj.vel
 
-    resultant = gravity + drag
+    total_force = gravity + drag_force
 
     if obj.mass > 0:
-        obj.acc = resultant / obj.mass
-    else:
-        obj.acc = np.array([0.0, 0.0])
+        obj.acc = total_force / obj.mass
 
 def update_physics(obj, dt):
     prev_acc = obj.acc
@@ -102,7 +107,7 @@ def update_physics(obj, dt):
 def r_colour():
     return (r.randint(0,255), r.randint(0,255), r.randint(0,255))
 
-objects = [ball([r.randint(50,950), r.randint(50,950)], vel=[r.randint(50,950), r.randint(50,950)], color=r_colour())
+objects = [ball([r.randint(50,950), r.randint(50,950)], vel=[r.randint(-950,950), r.randint(-950,950)], color=r_colour())
            for i in range(50)]
 
 
@@ -117,16 +122,12 @@ while running:
     for object in objects:
         update_physics(object, frame_time*playback_speed)
         border_collisions(object, 1000, 1000)
-    
     ball_collisions(objects)
-    
 
-    
     # display
     window.fill('black')
     for object in objects:
         py.draw.circle(window, object.color, object.pos, object.radius)
-
     py.display.update()
 
     time.sleep(frame_time)
