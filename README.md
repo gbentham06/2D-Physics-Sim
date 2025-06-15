@@ -16,4 +16,4 @@ It uses Pygame for a visual interface and allows for manipulation of:
 -friction
 -density
 -velocity
--colour
+-color
