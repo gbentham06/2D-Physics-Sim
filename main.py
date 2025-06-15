@@ -233,9 +233,13 @@ while running:
                         params['friction'] = temp_params['friction']
                         params['density'] = temp_params['density']
                         params['vel'] = np.array([temp_params['vx'], temp_params['vy']], dtype=float)
-                        cr = temp_params['cr'] if ui_elements[6]['checkbox'].checked else max(0, min(255,                                                                              temp_params['cr']))
-                        cg = temp_params['cg'] if ui_elements[7]['checkbox'].checked else max(0, min(255,                                                                             temp_params['cg']))
-                        cb = temp_params['cb'] if ui_elements[8]['checkbox'].checked else max(0, min(255,                                                                            temp_params['cb']))
+                        # fancy linebreaks i found for the inline IF statements :))))
+                        cr = temp_params['cr'] if ui_elements[6]['checkbox'].checked \
+                            else max(0, min(255,temp_params['cr']))
+                        cg = temp_params['cg'] if ui_elements[7]['checkbox'].checked \
+                            else max(0, min(255,temp_params['cg']))
+                        cb = temp_params['cb'] if ui_elements[8]['checkbox'].checked \
+                            else max(0, min(255,temp_params['cb']))
                         params['color'] = (cr, cg, cb)
 
                         # Create the ball
